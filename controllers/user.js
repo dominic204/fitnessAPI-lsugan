@@ -59,3 +59,18 @@ module.exports.loginUser = (req, res) => {
     return res.status(400).send({ error: 'Invalid in email'});
   }
 }
+
+
+module.exports.getDetails = (req, res) => {
+  return User.findById(req.user.id).select('-password')
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ error: `User not found` });
+      }
+      return res.status(200).send({ user });
+    })
+    .catch((findErr) => {
+      console.error("Error in finding the user: ", findErr);
+      return res.status(500).send({ error: "Failed to fetch user profile." });
+    });
+};
